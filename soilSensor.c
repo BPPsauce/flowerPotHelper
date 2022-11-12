@@ -54,15 +54,16 @@ static void readData(unsigned char regHigh, unsigned char regLow){
     prefix[1] = regLow;
 
     int res = read(i2cFileDesc, prefix, 2);
-    printf("Reading is: %d ", res);
+    printf("Reading is: %d \n", res);
 
 }
 
 void readCapa(){
     readData(SEESAW_TOUCH_BASE, SEESAW_TOUCH_OFFSET+ PIN);
+
 }
 
 void initSoilSensor(){
     i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, I2C_ADDR);
-    writeI2cReg(i2cFileDesc, 0x49, 0x00);
+    writeI2cReg(i2cFileDesc, 0x49, 0x11);
 }

@@ -6,6 +6,7 @@
 #include <sys/ioctl.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
+#include "audio.h"
 
 void makeAbeep(){
 }
