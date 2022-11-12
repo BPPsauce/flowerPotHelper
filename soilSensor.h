@@ -1,5 +1,5 @@
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#ifndef SOILSENSOR_H
+#define SOILSENSOR_H
 
 
 void readCapa();
