@@ -19,24 +19,25 @@ void sleep_for_ms(long long delayInMs) // given by instructor
     nanosleep(&reqDelay, (struct timespec *) NULL);
 }
 
-int file_read(char* filename)
-{
-    FILE *file = fopen(filename, "r");
-    if(file == NULL)
-    {
-        printf("Error opening AIN1 file\n");
-        exit(1);
+int getAnalogReading(char* analogFile){
+    // Open file
+    FILE *f = fopen(analogFile, "r");
+    if (!f) {
+        printf("ERROR: Unable to open voltage input file. Cape loaded?\n");
+        printf(" Check /boot/uEnv.txt for correct options.\n");
+        exit(-1);
     }
-    char buff[1024];
-    if(!fgets((buff), sizeof(buff), file))
-    {
-        printf("Error reading from AIN1 file\n");
-        exit(1);
+    // Get reading
+    int a2dReading = 0;
+    int itemsRead = fscanf(f, "%d", &a2dReading);
+    if (itemsRead <= 0) {
+        printf("ERROR: Unable to read values from voltage input file.\n");
+        exit(-1);
     }
-    fclose(file);
-    return atoi(buff);
+    // Close file
+    fclose(f);
+    return a2dReading;
 }
-
 
 void runCommand (char* command){
     // Execute the shell command (output into pipe)

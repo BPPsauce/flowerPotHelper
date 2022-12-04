@@ -1,16 +1,28 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <linux/i2c.h>
-#include <linux/i2c-dev.h>
 #include "soilSensor.h"
-
+#include "leds.h"
+#include "reminderPlayer.h"
+#include "audioMixer.h"
+#include <stdbool.h>
+#include "utils.h"
+#include "display.h"
+#include "joystick.h"
 
 
 int main(int argc, char *argv[])
 {
-    initSoilSensor();
-    readCapa();
+    //Initialization
+    reminderPlayerInit();
+    AudioMixer_init();
+    LED_Init();
+    displayInit();
+
+    //Use Joystick to update numsensor for led and display threads
+
+    displayCleanup();
+    LED_Cleanup();
+    AudioMixer_cleanup();
+    reminderPlayerStop();
+    
 }

@@ -1,69 +1,66 @@
-//
+//soilSensor.c
 #include <stdio.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/ioctl.h>
-#include <linux/i2c.h>
-#include <linux/i2c-dev.h>
+#include <string.h>
 #include "soilSensor.h"
+#include "utils.h"
+
+#define A2D_FILE_VOLTAGE0 "/sys/bus/iio/devices/iio:device0/in_voltage0_raw"
+#define A2D_FILE_VOLTAGE1 "/sys/bus/iio/devices/iio:device0/in_voltage1_raw"
+#define A2D_FILE_VOLTAGE4 "/sys/bus/iio/devices/iio:device0/in_voltage3_raw"
+
+#define SOIL_SENSOR0_VOLTAGE_FILE A2D_FILE_VOLTAGE0
+#define SOIL_SENSOR1_VOLTAGE_FILE A2D_FILE_VOLTAGE1
+#define SOIL_SENSOR2_VOLTAGE_FILE A2D_FILE_VOLTAGE4
+
+//Threshhold that determines water is needed
+#define MOISTURE_THRESHHOLD 3500 
+
+//Levels of moisture we can have 10 is Max Moist 0 is Dry
+#define NUM_MOISTURE_LEVELS 10
+
+//Maximum wetness Moisture Sensor can read
+#define MIN_MOISTURE_READING 2000
+
+//Maximum dryness Moisture Sensor can read
+#define MAX_MOISTURE_READING 4095
 
 
-#define SEESAW_ADDRESS 0x49//defult seesaw I2C address 
-#define SEESAW_STATUS_BASE 0x00
-#define SEESAW_STATUS_TEMP 0x04
-#define SEESAW_TOUCH_BASE 0x0F
-#define SEESAW_TOUCH_OFFSET 0x10
-#define SEESAW_EEPROM_I2C_ADDR 0x3F
-#define SEESAW_EEPROM_BASE 0X0D
-
-#define PIN 0
-
-#define I2C_LINUX_BUS1 "/dev/i2c-1"
-#define I2C_ADDR 0x37
-
-int i2cFileDesc; 
-
-
-static int initI2cBus (char* bus, int address){
-    int i2cFileDesc = open(bus, O_RDWR);
-    int result = ioctl(i2cFileDesc, I2C_SLAVE, address);
-    if (result < 0) {
-    perror("I2C: Unable to set I2C device to slave address.");
-    exit(1);
+static int readSoilMoisture(int sensorNumber){
+    int reading = 0;
+    if(sensorNumber == 0)
+        reading = getAnalogReading(SOIL_SENSOR0_VOLTAGE_FILE);
+    else if (sensorNumber == 1)
+        reading = getAnalogReading(SOIL_SENSOR1_VOLTAGE_FILE);
+    else if (sensorNumber == 2)
+        reading = getAnalogReading(SOIL_SENSOR2_VOLTAGE_FILE);
+    return reading;
 }
-    return i2cFileDesc;
-}
 
-
-static void writeI2cReg(int i2cFileDesc, unsigned char regAddr,unsigned char value){
-    unsigned char buff[2];
-    buff[0] = regAddr;
-    buff[1] = value;
-    int res = write(i2cFileDesc, buff, 2);
-
-    if (res != 2) {
-        perror("I2C: Unable to write i2c register.");
-        exit(1);
+bool isMoist(int sensorNumber)
+{
+    if(readSoilMoisture(sensorNumber) > MOISTURE_THRESHHOLD)
+    { 
+        return false;
     }
+    return true;
 }
 
-static void readData(unsigned char regHigh, unsigned char regLow){
-    unsigned char prefix[2];
-    prefix[0] = regHigh;
-    prefix[1] = regLow;
-
-    int res = read(i2cFileDesc, prefix, 2);
-    printf("Reading is: %d \n", res);
-
-}
-
-void readCapa(){
-    readData(SEESAW_TOUCH_BASE, SEESAW_TOUCH_OFFSET+ PIN);
-
-}
-
-void initSoilSensor(){
-    i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, I2C_ADDR);
-    writeI2cReg(i2cFileDesc, 0x49, 0x11);
+int getMoistureRating(int sensorNumber)
+{
+    double moistureReading = readSoilMoisture(sensorNumber);
+    moistureReading -= MIN_MOISTURE_READING;
+    double maxMoisture = MAX_MOISTURE_READING - MIN_MOISTURE_READING;
+    int moistureRating = 0;
+    for(int i = NUM_MOISTURE_LEVELS - 1; i > 0; i--)
+    {
+        if(moistureReading < i*maxMoisture/NUM_MOISTURE_LEVELS)
+        {
+            moistureRating++;
+        }
+    }
+    return moistureRating;
 }

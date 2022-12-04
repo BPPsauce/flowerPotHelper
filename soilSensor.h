@@ -1,8 +1,8 @@
-#ifndef SOILSENSOR_H
-#define SOILSENSOR_H
+//Soil Sensor 
+#include <stdbool.h>
 
+#define NUM_SENSORS 3
 
-void readCapa();
-void initSoilSensor();
+bool isMoist(int sensorNumber);
 
-#endif
+int getMoistureRating(int sensorNumber);

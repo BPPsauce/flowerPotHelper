@@ -54,15 +54,15 @@ static void i2cpinsInit(){
     runCommand("config-pin P9_17 i2c");
 }
 
-static bool is_in_bounds(int x, int y)
-{
-    if(x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT){
-        return false;
-    }
+// static bool is_in_bounds(int x, int y)
+// {
+//     if(x < 0 || x > SCREEN_WIDTH || y < 0 || y > SCREEN_HEIGHT){
+//         return false;
+//     }
     
-    return true;
+//     return true;
     
-}
+// }
 
 //init for the i2c bus
 static void initI2cBus (char* bus, int address){
@@ -89,27 +89,57 @@ static void writeI2cReg(int i2cFileDesc, unsigned char regAddr,unsigned char val
     }
 }
 
-static bool oled_draw_pixel(int x, int y)
-{
-    //add bits to buffer to represent a pixel
-    if(!is_in_bounds(x, y))
-    {
-        return false;
-    }
-    buffer[x + (y / 8) * SCREEN_WIDTH] |= (1 << (y & 7)); // placement in buffer determines where the pixel goes
-    return true;
-}
+// static bool oled_draw_pixel(int x, int y)
+// {
+//     //add bits to buffer to represent a pixel
+//     if(!is_in_bounds(x, y))
+//     {
+//         return false;
+//     }
+//     buffer[x + (y / 8) * SCREEN_WIDTH] |= (1 << (y & 7)); // placement in buffer determines where the pixel goes
+//     return true;
+// }
 
-void oled_draw_h_line(int x, int y, int len)
-{
+// void oled_draw_h_line(int x, int y, int len)
+// {
 
-}
+// }
 void oled_send_command(uint8_t c)
 {
     //send control byte 0x00 then our command
     initI2cBus(I2C_BUS_1, DISPLAY_SLAVE_ADDR);
-    writeI2cReg(i2c_file_desc, 0x0, 0x0);
-    writeI2cReg(i2c_file_desc, c, 0x0); // write to address, value does not matter 
+    writeI2cReg(i2c_file_desc, 0x0, c);
+    // writeI2cReg(i2c_file_desc, c, 0x0); // write to address, value does not matter 
+}
+
+void oled_send_data(uint8_t c)
+{
+    //send control byte 0x00 then our command
+    initI2cBus(I2C_BUS_1, DISPLAY_SLAVE_ADDR);
+    writeI2cReg(i2c_file_desc, 0x40, c);
+    // writeI2cReg(i2c_file_desc, c, 0x0); // write to address, value does not matter 
+}
+
+uint8_t oled_read_data()
+{
+    initI2cBus(I2C_BUS_1, DISPLAY_SLAVE_ADDR);
+    uint8_t buf[2];
+    buf[0] = 0x40;
+    write(i2c_file_desc, buf, 1);
+    read(i2c_file_desc, &buf, 2);
+    printf("buf0%dbuf1%d\n", buf[0], buf[1]);
+    return buf[1];
+}
+
+uint8_t oled_read_status_reg(void)
+{
+    uint8_t buf;
+    buf = 0x00;
+    initI2cBus(I2C_BUS_1, DISPLAY_SLAVE_ADDR);
+    // write(i2c_file_desc, buf, 1);
+    read(i2c_file_desc, &buf, 1);
+    printf("%d\n", buf);
+    return buf;
 }
 
 bool oled_init()
@@ -118,38 +148,52 @@ bool oled_init()
     if(!buffer){
         return false;
     }
-    
-    //set up procedure mimicing adafruit library procedure
+    i2cpinsInit();
+    printf("Configured Pins\n");
+
+    // set up procedure mimicking adafruit library procedure
     oled_send_command(SSD1306_DISPLAYOFF);
 
-    oled_send_command(SSD1306_SETDISPLAYOFFSET);
-    oled_send_command(0x0);
+    // oled_send_command(SSD1306_SETDISPLAYOFFSET);
+    // oled_send_command(0x0);
 
-    oled_send_command(SSD1306_SETSTARTLINE);
-    oled_send_command(SSD1306_CHARGEPUMP);
+    // oled_send_command(SSD1306_SETSTARTLINE);
+    // oled_send_command(SSD1306_CHARGEPUMP);
+    // oled_send_command(0x10); // Not external vcc
     
-    oled_send_command(SSD1306_MEMORYMODE);
-    oled_send_command(0x0);
+    // oled_send_command(SSD1306_MEMORYMODE);
+    // oled_send_command(0x0);
+    // oled_send_command(SSD1306_SEGREMAP | 0x1);
+    // oled_send_command(SSD1306_COMSCANDEC);
     
-    oled_send_command(SSD1306_COMSCANDEC);
+    // oled_send_command(SSD1306_SETCOMPINS);
+    // oled_send_command(0x02);
+    // oled_send_command(SSD1306_SETCONTRAST);
+    // oled_send_command(0x8F);    
+
+    // oled_send_command(SSD1306_SETPRECHARGE);
+    // oled_send_command(0x22);
+
+    // oled_send_command(SSD1306_SETVCOMDETECT);
+    // oled_send_command(0x40);
     
-    oled_send_command(SSD1306_SETVCOMDETECT);
-    oled_send_command(0x40);
-    
-    oled_send_command(SSD1306_DISPLAYALLON_RESUME);
-    oled_send_command(SSD1306_NORMALDISPLAY);
-    oled_send_command(SSD1306_DEACTIVATESCROLL);
-    oled_send_command(SSD1306_DISPLAYON);
+    // oled_send_command(SSD1306_DISPLAYALLON_RESUME);
+    // oled_send_command(SSD1306_NORMALDISPLAY);
+    // oled_send_command(SSD1306_DEACTIVATESCROLL);
+    // oled_send_command(SSD1306_DISPLAYON);
+    // oled_send_command(SSD1306_DISPLAYALLON);
+    // printf("Finished sending commands\n");
+    // oled_send_data(0xFF);
+    // oled_send_data(0xFF);
+    oled_send_data(SSD1306_DISPLAYON);
+    oled_read_data();
+    oled_read_status_reg();
+
     return true;
 }
-void oled_push_to_display(void)
-{
-    //send control byte 0x40 then our data content in buffer
+// void oled_push_to_display(void)
+// {
+//     //send control byte 0x40 then our data content in buffer
 
-}
+// }
 
-int main(void)
-{
-    //test main
-    
-}
