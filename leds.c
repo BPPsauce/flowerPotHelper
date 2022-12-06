@@ -88,6 +88,11 @@ static void *ledUpdateThread(void *_)
     return NULL;
 }
 
+void LED_setCurrentSensor(int sensorNumber)
+{
+    currentSensor = sensorNumber;
+}
+
 void setCurrentSensor(int sensorNum)
 {
     currentSensor = sensorNum;

@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
             plant_number = plant_number - 1;
             if(plant_number < 0){
                 plant_number = 2;
-            } 
+            }
+            LED_setCurrentSensor(plant_number);
             printPlant(plant_number);
             break;
         case 4: //right
@@ -62,6 +63,7 @@ int main(int argc, char *argv[])
             if(plant_number > 2){
                 plant_number = 0;
             }
+            LED_setCurrentSensor(plant_number);
             printPlant(plant_number);
             break;
         default:
