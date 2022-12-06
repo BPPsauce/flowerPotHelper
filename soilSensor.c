@@ -36,13 +36,16 @@ static int readSoilMoisture(int sensorNumber){
     int reading = 0;
     if(sensorNumber == 0){
         reading = getAnalogReading(SOIL_SENSOR0_VOLTAGE_FILE);
-        printf("reading0: %d", reading);}
+        //printf("reading0: %d", reading);}
+    }
     else if (sensorNumber == 1){
         reading = getAnalogReading(SOIL_SENSOR1_VOLTAGE_FILE);
-        printf("reading1: %d", reading);}
+        //printf("reading1: %d", reading);
+        }
     else if (sensorNumber == 2){
         reading = getAnalogReading(SOIL_SENSOR2_VOLTAGE_FILE);
-        printf("reading2: %d", reading);}
+        //printf("reading2: %d", reading);
+        }
     return reading;
 }
 

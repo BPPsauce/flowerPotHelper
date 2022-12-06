@@ -45,6 +45,7 @@ unsigned char numberTable[10][8] = {{0x02, 0x05, 0x05, 0x05, 0x05, 0x05, 0x02, 0
 unsigned char smileyFace [] = {0x1E, 0X21, 0XD2, 0XC0, 0XD2, 0XCC, 0X21, 0x1E};
 unsigned char sadFace [] = {0x1E, 0X21, 0XD2, 0XC0, 0XCC, 0XD2, 0X21, 0x1E};
 unsigned char letterP [] = {0x20, 0x50, 0x50, 0x50, 0x60, 0x40, 0x40, 0x40};
+unsigned char letterL [] = {0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0xF0};
 
 //init for the i2c bus
 static int initI2cBus (char* bus, int address){
@@ -85,42 +86,6 @@ static void i2cpinsInit(){
 }
 
 
-//split an interge to 2 digits
-static int * integerSplit(int number){
-    if (number > 99){
-        number = 99;
-    }
-    int * digit = malloc(sizeof(int) * 1);
-
-    for(int i = 0; i < 2; i++){
-        digit[i] = number%10;
-        number = number/10;
-    }
-
-    return digit;
-}
-
-void printInteger(int reading){
-    int * digit = integerSplit(reading);
-
-    int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
-    //empty value arrays, ready for OR and shift operation
-    unsigned char value[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    unsigned char shifted[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    for (int i = 0; i < 8; i++){
-        //the number on the left is 4 bits shifted to the left
-        shifted[i] = numberTable[digit[1]][i] << 4;
-        value[i] |= numberTable[digit[0]][i];
-        //then OR together to get the final value
-        value[i] |= shifted[i];
-    }
-
-    for (int i = 0; i < 8; i++){
-        writeI2cReg(i2cFileDesc, rows[i], value[i]);
-    }
-    //free the array
-    free(digit);
-}
 
 void printSmileyFace(){
     int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
@@ -138,7 +103,7 @@ void printSadFace(){
 
 void printPlant(int plant){
     int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
-    unsigned char value[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+     unsigned char value[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     for (int i = 0; i < 8; i++){
         value[i] |= numberTable[plant][i];
         //then OR together to get the final value
@@ -149,6 +114,20 @@ void printPlant(int plant){
         writeI2cReg(i2cFileDesc, rows[i], value[i]);
     }
 
+}
+
+void printLevel(int level){
+    int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
+    unsigned char value[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    for (int i = 0; i < 8; i++){
+        value[i] |= numberTable[level][i];
+        //then OR together to get the final value
+        value[i] |= letterL[i];
+    }
+
+    for (int i = 0; i < 8; i++){
+        writeI2cReg(i2cFileDesc, rows[i], value[i]);
+    }
 }
 
 /*static void *displayUpdateThread(void* _)
