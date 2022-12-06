@@ -15,7 +15,7 @@ static pthread_t reminderGenerationThreadID;
 
 static void playReminder(){
     AudioMixer_queueSound(&reminderSound);
-    sleep_for_ms(500);
+    sleep_for_ms(1000);
 }
 
 static void *reminderGenerationThread(void *_){
