@@ -26,8 +26,8 @@ static void *reminderGenerationThread(void *_){
             {
                 playReminder();
             }
+            sleep_for_ms(500);
         }
-        sleep_for_ms(500);
     }
     return NULL;
 }

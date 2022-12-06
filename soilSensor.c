@@ -10,7 +10,7 @@
 
 #define A2D_FILE_VOLTAGE0 "/sys/bus/iio/devices/iio:device0/in_voltage0_raw"
 #define A2D_FILE_VOLTAGE1 "/sys/bus/iio/devices/iio:device0/in_voltage1_raw"
-#define A2D_FILE_VOLTAGE4 "/sys/bus/iio/devices/iio:device0/in_voltage3_raw"
+#define A2D_FILE_VOLTAGE4 "/sys/bus/iio/devices/iio:device0/in_voltage4_raw"
 
 #define SOIL_SENSOR0_VOLTAGE_FILE A2D_FILE_VOLTAGE0
 #define SOIL_SENSOR1_VOLTAGE_FILE A2D_FILE_VOLTAGE1
