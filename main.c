@@ -8,6 +8,8 @@
 #include "utils.h"
 #include "display.h"
 #include "joystick.h"
+#define GREEN_BUTTON "/sys/class/gpio/gpio65/value"
+
 
 
 int main(int argc, char *argv[])
@@ -18,9 +20,13 @@ int main(int argc, char *argv[])
     LED_Init();
     displayInit();
 
+    configGreenButt();
+    int greenbutton = 0;
+    greenbutton = readFromFile(GREEN_BUTTON);
 
 
-    while(true){
+
+    while(greenbutton == 0){
         double x = joyStickReadX();
         double y = joyStickReadY();
         int direction = getDirection(x, y);
@@ -41,6 +47,11 @@ int main(int argc, char *argv[])
             x = joyStickReadX();
             y = joyStickReadY();
             direction = getDirection(x, y);
+            greenbutton = readFromFile(GREEN_BUTTON);
+            if(greenbutton == 1){
+                printf("Shutting down system\n");
+                exit(1);
+            }
         }
 
         //Up
@@ -54,7 +65,6 @@ int main(int argc, char *argv[])
         if(direction = 2){
             printPlant(plant_number);
             sleep_for_ms(1000);
-            
         }
 
         //Left
@@ -73,9 +83,11 @@ int main(int argc, char *argv[])
             }
             sleep_for_ms(100); 
         }
+        greenbutton = readFromFile(GREEN_BUTTON);
 
     }
 
+    printf("Shutting down system\n");
     displayCleanup();
     LED_Cleanup();
     AudioMixer_cleanup();
