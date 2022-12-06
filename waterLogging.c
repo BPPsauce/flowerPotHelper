@@ -6,21 +6,24 @@
 #include "waterLogging.h"
 #include "soilSensor.h"
 #include "utils.h"
+#include <time.h>
 
 #define LOG_FILE "water_log.txt"
 
 static int POTS_previousMoistureRating[3];
 static pthread_t waterLoggingThreadId;
 static int stopping = 0;
+static time_t t;
 
 bool waterLogging_WriteMoistureUpdate(void)
 {
-    char buff[50];
+    char buff[100];
     bool ret = true;
     for(int i = 0; i < NUM_SENSORS; i++)
     {
         int currentMoistureRating = getMoistureRating(i);
-        sprintf(buff, "Sensor %d: Moisture Rating %d\n", i + 1, currentMoistureRating);
+        time(&t);
+        sprintf(buff, "Pot %d: Moisture Rating %d Time: %s", i + 1, currentMoistureRating, ctime(&t));
         ret = file_write(LOG_FILE, buff);
     }
     if(ret)
@@ -33,8 +36,9 @@ bool waterLogging_WriteMoistureUpdate(void)
 bool waterLogging_WriteWateringEvent(int sensorNumber)
 {
     int currentMoistureRating = getMoistureRating(sensorNumber);
-    char buff[50];
-    sprintf(buff, "Pot %d has been Watered! Moisture Rating is now %d\n", sensorNumber + 1, currentMoistureRating);
+    char buff[100];
+    time(&t);
+    sprintf(buff, "Pot %d has been Watered! Moisture Rating is now %d Time: %s", sensorNumber + 1, currentMoistureRating, ctime(&t));
     return file_write(LOG_FILE, buff);
 }
 
