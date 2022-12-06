@@ -20,13 +20,13 @@
 #define MOISTURE_THRESHHOLD 1200
 
 //Levels of moisture we can have 10 is Max Moist 0 is Dry
-#define NUM_MOISTURE_LEVELS 10
+#define NUM_MOISTURE_LEVELS 4
 
 //Maximum wetness Moisture Sensor can read
-#define MIN_MOISTURE_READING 800
+#define MIN_MOISTURE_READING 1000
 
 //Maximum dryness Moisture Sensor can read
-#define MAX_MOISTURE_READING 3500
+#define MAX_MOISTURE_READING 2500
 
 //Number of Sample Readings for Average Sample Value
 #define NUM_SENSOR_READINGS 4
@@ -63,7 +63,7 @@ int getAvgMoistureReading(int sensorNumber)
 
 bool isMoist(int sensorNumber)
 {
-    int moistureReading = getAvgMoistureReading(sensorNumber);   
+    int moistureReading = getAvgMoistureReading(sensorNumber);
     if(moistureReading > MOISTURE_THRESHHOLD)
     { 
         return false;
