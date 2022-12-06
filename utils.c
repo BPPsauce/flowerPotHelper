@@ -60,3 +60,36 @@ void runCommand (char* command){
         printf(" exit code: %d\n", exitCode);
         }
 }
+
+void configGreenButt()
+{
+	char *configGPIO = "config-pin p8.65 gpio";
+    system(configGPIO);
+
+    FILE *pFile = fopen("/sys/class/gpio/gpio65/direction", "w");
+	if (pFile == NULL) {
+		printf("ERROR: Unable to open export file.\n");
+		exit(1);
+	}
+
+	fprintf(pFile, "%s", "in");
+	fclose(pFile);
+}
+
+int readFromFile(char *fileName)
+{
+	FILE *pFile = fopen(fileName, "r");
+	if (pFile == NULL)
+	{
+		printf("ERROR to open file for button (%s) for read\n", fileName);
+		exit(-1);
+	}
+	// Read string (line)
+	const int MAX_LENGTH = 1024;
+	char buff[MAX_LENGTH];
+	fgets(buff, MAX_LENGTH, pFile);
+	// Close
+	fclose(pFile);
+	int i = buff[0] - '0';
+	return i;
+}
