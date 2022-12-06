@@ -17,13 +17,13 @@
 #define SOIL_SENSOR2_VOLTAGE_FILE A2D_FILE_VOLTAGE5
 
 //Threshhold that determines water is needed
-#define MOISTURE_THRESHHOLD 1500
+#define MOISTURE_THRESHHOLD 1400
 
 //Levels of moisture we can have 10 is Max Moist 0 is Dry
 #define NUM_MOISTURE_LEVELS 10
 
 //Maximum wetness Moisture Sensor can read
-#define MIN_MOISTURE_READING 1000
+#define MIN_MOISTURE_READING 500
 
 //Maximum dryness Moisture Sensor can read
 #define MAX_MOISTURE_READING 2800
@@ -55,6 +55,7 @@ int getAvgMoistureReading(int sensorNumber)
     for(int i = 0; i < NUM_SENSOR_READINGS; i++)
     {
         avg_value += readSoilMoisture(sensorNumber);
+        sleep_for_ms(50);
     }
     avg_value = avg_value / 5;
     return avg_value;
