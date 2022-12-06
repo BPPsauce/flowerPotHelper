@@ -1,8 +1,8 @@
 # Makefile for building embedded application.
 # by Brian Fraser
 # Edit this file to compile extra C files into their own programs.
-TARGET= flowerPotHelper.out
-SOURCES= main.c joystick.c utils.c audioMixer.c display.c leds.c reminderPlayer.c soilSensor.c 
+TARGET= flowerPotHelper
+SOURCES= main.c joystick.c utils.c display.c leds.c soilSensor.c 
 PUBDIR = $(HOME)/cmpt433/public/myApps
 OUTDIR = $(PUBDIR)
 CROSS_TOOL = arm-linux-gnueabihf-
@@ -13,8 +13,8 @@ LFLAGS = -L$(HOME)/cmpt433/public/asound_lib_BBB
 
 # -pg for supporting gprof profiling.
 #CFLAGS += -pg
-all: cmp
-cmp:
+all: flowerPotHelper
+flowerPotHelper:
 	$(CC_C) $(CFLAGS) $(SOURCES) -o $(OUTDIR)/$(TARGET) $(LFLAGS) -lpthread -lasound
 clean:
 	rm -f $(OUTDIR)/$(TARGET)
