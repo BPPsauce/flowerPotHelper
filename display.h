@@ -6,11 +6,15 @@
 //print out integer
 void printInteger(int reading);
 
-void printDouble(double reading);
-
 void updateCurrentSensor(int numSensor);
 
 void displayInit(void);
+
+void printSmileyFace(void);
+
+void printSadFace(void);
+
+void printPlant(int plant);
 
 void displayCleanup(void);
 

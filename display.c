@@ -41,6 +41,11 @@ unsigned char numberTable[10][8] = {{0x02, 0x05, 0x05, 0x05, 0x05, 0x05, 0x02, 0
                                     {0x07, 0x05, 0x05, 0x02, 0x05, 0x05, 0x07, 0x00}, //8
                                     {0x07, 0x05, 0x05, 0x07, 0x01, 0x05, 0x07, 0x00}}; //9
 
+
+unsigned char smileyFace [] = {0x1E, 0X21, 0XD2, 0XC0, 0XD2, 0XCC, 0X21, 0x1E};
+unsigned char sadFace [] = {0x1E, 0X21, 0XD2, 0XC0, 0XCC, 0XD2, 0X21, 0x1E};
+unsigned char letterP [] = {0x20, 0x50, 0x50, 0x50, 0x60, 0x40, 0x40, 0x40};
+
 //init for the i2c bus
 static int initI2cBus (char* bus, int address){
     int i2cFileDesc = open(bus, O_RDWR);
@@ -80,7 +85,6 @@ static void i2cpinsInit(){
 }
 
 
-
 //split an interge to 2 digits
 static int * integerSplit(int number){
     if (number > 99){
@@ -92,25 +96,6 @@ static int * integerSplit(int number){
         digit[i] = number%10;
         number = number/10;
     }
-
-    return digit;
-}
-
-//solit a double to 2 digits 
-//decimal part and intege part
-static int * doubleSplit(double number){
-    if (number > 9.9){
-        number = 9.9;
-    }
-    int * digit = malloc(sizeof(int) * 1);
-
-    int intPart = (int)number; //cast it int
-    double temp = number - intPart;
-    temp = 10 * temp;
-    int decPart = (int)temp;
-
-    digit[0] = decPart;
-    digit[1] = intPart;
 
     return digit;
 }
@@ -137,13 +122,48 @@ void printInteger(int reading){
     free(digit);
 }
 
+void printSmileyFace(){
+    int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
+    for (int i = 0; i < 8; i++){
+        writeI2cReg(i2cFileDesc, rows[i], smileyFace[i]);
+    }
+}
+
+void printSadFace(){
+    int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
+    for (int i = 0; i < 8; i++){
+        writeI2cReg(i2cFileDesc, rows[i], sadFace[i]);
+    }
+}
+
+void printPlant(int plant){
+    int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
+    unsigned char value[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    for (int i = 0; i < 8; i++){
+        value[i] |= numberTable[plant][i];
+        //then OR together to get the final value
+        value[i] |= letterP[i];
+    }
+
+    for (int i = 0; i < 8; i++){
+        writeI2cReg(i2cFileDesc, rows[i], value[i]);
+    }
+
+}
+
 static void *displayUpdateThread(void* _)
 {
     while(!stopping)
-    {
+    {   
+        printPlant(1);
+        sleep_for_ms(1000);
+        printSadFace();
+        sleep_for_ms(1000);
+        printSmileyFace();
+        sleep_for_ms(1000);
         int moistureRating = getMoistureRating(currentSensor);
         printInteger(moistureRating);
-        sleep_for_ms(300);
+        sleep_for_ms(1000);
     }
     return NULL;
 }
@@ -154,7 +174,6 @@ void displayInit(){
     int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
     writeI2cReg(i2cFileDesc, 0x21, 0x00);
     writeI2cReg(i2cFileDesc, 0x81, 0x00);
-    resetDisplay();
     pthread_create(&displayUpdateThreadId, NULL, &displayUpdateThread, NULL);
 }
 
@@ -163,30 +182,9 @@ void updateCurrentSensor(int numSensor)
     currentSensor = numSensor;
 }
 
-void printDouble(double reading){
-    int * digit = doubleSplit(reading);
-
-    int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
-    //empty value arrays, ready for OR and shift operation
-    unsigned char value[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08};
-    unsigned char shifted[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    for (int i = 0; i < 8; i++){
-        //the number on the left is 4 bits shifted to the left
-        shifted[i] = numberTable[digit[1]][i] << 4;
-        value[i] |= numberTable[digit[0]][i];
-        //then OR together to get the final value
-        value[i] |= shifted[i];
-    }
-
-    for (int i = 0; i < 8; i++){
-        writeI2cReg(i2cFileDesc, rows[i], value[i]);
-    }
-    //free the array
-    free(digit);
-}
-
 void displayCleanup(void)
 {
     stopping = true;
+    resetDisplay();
     pthread_join(displayUpdateThreadId, NULL);
 }
