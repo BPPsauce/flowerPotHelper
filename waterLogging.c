@@ -7,7 +7,7 @@
 #include "soilSensor.h"
 #include "utils.h"
 
-#define LOG_FILE "logs/water_log.txt"
+#define LOG_FILE "water_log.txt"
 
 static int POTS_previousMoistureRating[3];
 static pthread_t waterLoggingThreadId;
