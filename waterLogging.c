@@ -47,7 +47,7 @@ bool waterLogging_GotWatered(int sensorNumber)
 {
     int newMoistureRating = getMoistureRating(sensorNumber);
     // printf("sensor: %d, new rating: %d, old rating: %d\n", sensorNumber, newMoistureRating, POTS_previousMoistureRating[sensorNumber]);
-    if(newMoistureRating > POTS_previousMoistureRating[sensorNumber])
+    if(newMoistureRating > POTS_previousMoistureRating[sensorNumber] + 1)
     {
         return true;
     }
