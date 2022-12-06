@@ -17,16 +17,19 @@
 #define SOIL_SENSOR2_VOLTAGE_FILE A2D_FILE_VOLTAGE5
 
 //Threshhold that determines water is needed
-#define MOISTURE_THRESHHOLD 1700
+#define MOISTURE_THRESHHOLD 1500
 
 //Levels of moisture we can have 10 is Max Moist 0 is Dry
 #define NUM_MOISTURE_LEVELS 10
 
 //Maximum wetness Moisture Sensor can read
-#define MIN_MOISTURE_READING 1300
+#define MIN_MOISTURE_READING 1100
 
 //Maximum dryness Moisture Sensor can read
-#define MAX_MOISTURE_READING 2100
+#define MAX_MOISTURE_READING 2500
+
+//Number of Sample Readings for Average Sample Value
+#define NUM_SENSOR_READINGS 5
 
 
 static int readSoilMoisture(int sensorNumber){
@@ -43,9 +46,21 @@ static int readSoilMoisture(int sensorNumber){
     return reading;
 }
 
+int getAvgMoistureReading(int sensorNumber)
+{
+    int avg_value = 0;
+    for(int i = 0; i < NUM_SENSOR_READINGS; i++)
+    {
+        avg_value += readSoilMoisture(sensorNumber);
+    }
+    avg_value = avg_value / 5;
+    return avg_value;
+}
+
 bool isMoist(int sensorNumber)
 {
-    if(readSoilMoisture(sensorNumber) > MOISTURE_THRESHHOLD)
+    int moistureReading = getAvgMoistureReading(sensorNumber);   
+    if(moistureReading > MOISTURE_THRESHHOLD)
     { 
         return false;
     }
@@ -54,7 +69,7 @@ bool isMoist(int sensorNumber)
 
 int getMoistureRating(int sensorNumber)
 {
-    double moistureReading = readSoilMoisture(sensorNumber);
+    double moistureReading = getAvgMoistureReading(sensorNumber);
     // printf("sensornum: %d value: %f\n", sensorNumber, moistureReading);
     moistureReading -= MIN_MOISTURE_READING;
     double maxMoisture = MAX_MOISTURE_READING - MIN_MOISTURE_READING;

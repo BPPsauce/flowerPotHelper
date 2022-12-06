@@ -8,8 +8,11 @@
 #include "utils.h"
 #include "display.h"
 #include "joystick.h"
+#include "waterLogging.h"
 #define GREEN_BUTTON "/sys/class/gpio/gpio65/value"
 
+//black 1
+//green 0
 
 
 int main(int argc, char *argv[])
@@ -18,8 +21,9 @@ int main(int argc, char *argv[])
     reminderPlayerInit();
     AudioMixer_init();
     LED_Init();
-    //displayInit();
     displayInit();
+    waterLogging_Init();
+    
 
     configGreenButt();
     int greenbutton = 0;
@@ -76,6 +80,7 @@ int main(int argc, char *argv[])
     }
 
     printf("Shutting down system\n");
+    waterLogging_Cleanup();
     LED_Cleanup();
     AudioMixer_cleanup();
     reminderPlayerStop();
