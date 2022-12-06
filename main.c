@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
         }
 
         greenbutton = readFromFile(GREEN_BUTTON);
-        sleep_for_ms(500);
+        sleep_for_ms(300);
     }
 
     printf("Shutting down system\n");

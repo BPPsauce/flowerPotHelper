@@ -17,26 +17,29 @@
 #define SOIL_SENSOR2_VOLTAGE_FILE A2D_FILE_VOLTAGE5
 
 //Threshhold that determines water is needed
-#define MOISTURE_THRESHHOLD 3500 
+#define MOISTURE_THRESHHOLD 1700
 
 //Levels of moisture we can have 10 is Max Moist 0 is Dry
 #define NUM_MOISTURE_LEVELS 10
 
 //Maximum wetness Moisture Sensor can read
-#define MIN_MOISTURE_READING 900
+#define MIN_MOISTURE_READING 1300
 
 //Maximum dryness Moisture Sensor can read
-#define MAX_MOISTURE_READING 1600
+#define MAX_MOISTURE_READING 2100
 
 
 static int readSoilMoisture(int sensorNumber){
     int reading = 0;
-    if(sensorNumber == 0)
+    if(sensorNumber == 0){
         reading = getAnalogReading(SOIL_SENSOR0_VOLTAGE_FILE);
-    else if (sensorNumber == 1)
+        printf("reading0: %d", reading);}
+    else if (sensorNumber == 1){
         reading = getAnalogReading(SOIL_SENSOR1_VOLTAGE_FILE);
-    else if (sensorNumber == 2)
+        printf("reading1: %d", reading);}
+    else if (sensorNumber == 2){
         reading = getAnalogReading(SOIL_SENSOR2_VOLTAGE_FILE);
+        printf("reading2: %d", reading);}
     return reading;
 }
 
