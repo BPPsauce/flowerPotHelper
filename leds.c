@@ -1,8 +1,6 @@
 //LED .c 
 #include <stdio.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <unistd.h>
 #include <pthread.h>
 #include "leds.h"
 #include "utils.h"
@@ -33,7 +31,7 @@
 #define LED_ON 1
 #define LED_OFF 0
 
-pthread_t ledThreadID;
+static pthread_t ledThreadID;
 static bool stopping = 0;
 static int currentSensor = 0;
 

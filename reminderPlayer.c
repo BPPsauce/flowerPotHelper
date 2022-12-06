@@ -34,7 +34,6 @@ static void *reminderGenerationThread(void *_){
 
 
 void reminderPlayerInit(void){
-    AudioMixer_setVolume(100);
     AudioMixer_readWaveFileIntoMemory(REMINDER_SOUND, &reminderSound);
     pthread_create(&reminderGenerationThreadID, NULL, &reminderGenerationThread, NULL);
 }

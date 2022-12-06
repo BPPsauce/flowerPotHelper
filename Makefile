@@ -2,7 +2,7 @@
 # by Brian Fraser
 # Edit this file to compile extra C files into their own programs.
 TARGET= flowerPotHelper.out
-SOURCES= main.c joystick.c utils.c audioMixer.c display.c leds.c reminderPlayer.c soilSensor.c 
+SOURCES= main.c joystick.c utils.c audioMixer.c display.c leds.c reminderPlayer.c soilSensor.c waterLogging.c
 PUBDIR = $(HOME)/cmpt433/public/myApps
 OUTDIR = $(PUBDIR)
 CROSS_TOOL = arm-linux-gnueabihf-

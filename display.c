@@ -22,7 +22,7 @@
 #define ROW6 0X0C
 #define ROW7 0X0E
 
-pthread_t displayUpdateThreadId;
+static pthread_t displayUpdateThreadId;
 static int currentSensor = 0;
 static int stopping = 0;
 

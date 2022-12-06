@@ -5,6 +5,19 @@
 #include <time.h> // for nanosleep
 #include "utils.h"
 #include <unistd.h>
+#include <stdbool.h>
+
+bool file_write(char *filename, char *val)
+{
+    FILE *pFile = fopen(filename, "a");
+	if (pFile == NULL) {
+		printf("ERROR: Unable to open export file.\n");
+		return false;	
+	}	
+	fprintf(pFile, "%s", val);
+	fclose(pFile);
+    return true;
+}
 
 void sleep_for_ms(long long delayInMs) // given by instructor
 {
