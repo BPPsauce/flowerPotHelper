@@ -17,16 +17,16 @@
 #define SOIL_SENSOR2_VOLTAGE_FILE A2D_FILE_VOLTAGE5
 
 //Threshhold that determines water is needed
-#define MOISTURE_THRESHHOLD 1200
+#define MOISTURE_THRESHHOLD 1300
 
 //Levels of moisture we can have 10 is Max Moist 0 is Dry
-#define NUM_MOISTURE_LEVELS 4
+#define NUM_MOISTURE_LEVELS 6
 
 //Maximum wetness Moisture Sensor can read
-#define MIN_MOISTURE_READING 1000
+#define MIN_MOISTURE_READING 900
 
 //Maximum dryness Moisture Sensor can read
-#define MAX_MOISTURE_READING 2500
+#define MAX_MOISTURE_READING 2600
 
 //Number of Sample Readings for Average Sample Value
 #define NUM_SENSOR_READINGS 4

@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include "soilSensor.h"
 
-#define REMINDER_SOUND "beatbox-wav-files/100051__menegass__gui-drum-bd-hard.wav"
+#define REMINDER_SOUND "beatbox-wav-files/mixkit-musical-alert-notification-2309.wav"
 
 static wavedata_t reminderSound;
 static bool quit = false;
