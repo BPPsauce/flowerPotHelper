@@ -42,11 +42,11 @@ int main(int argc, char *argv[])
             moist = isMoist(plant_number);
             if(moist){
                 printSmileyFace();
-                sleep_for_ms(1000);
+                sleep_for_ms(300);
             }
             else{
                 printSadFace();
-                sleep_for_ms(1000);
+                sleep_for_ms(300);
             }
             break;
         case 1: //up
@@ -87,6 +87,6 @@ int main(int argc, char *argv[])
     LED_Cleanup();
     AudioMixer_cleanup();
     reminderPlayerStop();
-    //displayCleanup();
+    displayCleanup();
     
 }
