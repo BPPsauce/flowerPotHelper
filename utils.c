@@ -75,7 +75,7 @@ void runCommand (char* command){
 
 void configGreenButt()
 {
-	char *configGPIO = "config-pin p8.65 gpio";
+	char *configGPIO = "config-pin p8.18 gpio";
     system(configGPIO);
 
     FILE *pFile = fopen("/sys/class/gpio/gpio65/direction", "w");

@@ -18,21 +18,19 @@ int main(int argc, char *argv[])
     reminderPlayerInit();
     AudioMixer_init();
     LED_Init();
+    //displayInit();
     displayInit();
 
     configGreenButt();
     int greenbutton = 0;
     greenbutton = readFromFile(GREEN_BUTTON);
-
-
+    int direction = 0;
+    int plant_number = 0;
+    int rating = 0;
+    bool moist = false;
 
     while(greenbutton == 0){
-        double x = joyStickReadX();
-        double y = joyStickReadY();
-        int direction = getDirection(x, y);
-        int plant_number = 0;
-        int rating;
-        bool moist;
+        direction = getDirection(joyStickReadX(), joyStickReadY());
 
         switch (direction)
         {
@@ -70,13 +68,15 @@ int main(int argc, char *argv[])
             printf("Joystick reading not correct!\n");
             break;
         }
+
         greenbutton = readFromFile(GREEN_BUTTON);
+        sleep_for_ms(500);
     }
 
     printf("Shutting down system\n");
-    displayCleanup();
     LED_Cleanup();
     AudioMixer_cleanup();
     reminderPlayerStop();
+    //displayCleanup();
     
 }

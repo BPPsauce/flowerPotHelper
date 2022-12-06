@@ -22,9 +22,9 @@
 #define ROW6 0X0C
 #define ROW7 0X0E
 
-static pthread_t displayUpdateThreadId;
+//static pthread_t displayUpdateThreadId;
 static int currentSensor = 0;
-static int stopping = 0;
+//static int stopping = 0;
 
 unsigned char rows[] = {ROW7, ROW6, ROW5, ROW4, ROW3, ROW2, ROW1, ROW0};
 
@@ -151,7 +151,7 @@ void printPlant(int plant){
 
 }
 
-static void *displayUpdateThread(void* _)
+/*static void *displayUpdateThread(void* _)
 {
     while(!stopping)
     {   
@@ -166,7 +166,7 @@ static void *displayUpdateThread(void* _)
         sleep_for_ms(1000);
     }
     return NULL;
-}
+}*/
 
 //init the i2c pins and turn on the display
 void displayInit(){
@@ -174,7 +174,7 @@ void displayInit(){
     int i2cFileDesc = initI2cBus(I2C_LINUX_BUS1, DISPLAY_I2C_ADDR);
     writeI2cReg(i2cFileDesc, 0x21, 0x00);
     writeI2cReg(i2cFileDesc, 0x81, 0x00);
-    pthread_create(&displayUpdateThreadId, NULL, &displayUpdateThread, NULL);
+    //pthread_create(&displayUpdateThreadId, NULL, &displayUpdateThread, NULL);
 }
 
 void updateCurrentSensor(int numSensor)
@@ -184,7 +184,7 @@ void updateCurrentSensor(int numSensor)
 
 void displayCleanup(void)
 {
-    stopping = true;
+    //stopping = true;
     resetDisplay();
-    pthread_join(displayUpdateThreadId, NULL);
+    //pthread_join(displayUpdateThreadId, NULL);
 }
