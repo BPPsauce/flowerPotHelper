@@ -34,9 +34,9 @@ int main(int argc, char *argv[])
         int rating;
         bool moist;
 
-     
-        //Center
-        while(direction = 0){
+        switch (direction)
+        {
+        case 0: //center
             moist = isMoist(plant_number);
             if(moist){
                 printSmileyFace();
@@ -44,47 +44,33 @@ int main(int argc, char *argv[])
             else{
                 printSadFace();
             }
-            x = joyStickReadX();
-            y = joyStickReadY();
-            direction = getDirection(x, y);
-            greenbutton = readFromFile(GREEN_BUTTON);
-            if(greenbutton == 1){
-                printf("Shutting down system\n");
-                exit(1);
-            }
-        }
-
-        //Up
-        if(direction = 1){
+            break;
+        case 1: //up
             rating = getMoistureRating(plant_number);
             printInteger(rating);
-            sleep_for_ms(1000); 
-        }
-
-        //Down
-        if(direction = 2){
+            break;
+        case 2: //down 
             printPlant(plant_number);
-            sleep_for_ms(1000);
-        }
-
-        //Left
-        if(direction = 3){
+            break;
+        case 3: //left
             plant_number = plant_number - 1;
             if(plant_number < 0){
                 plant_number = 2;
             } 
-            sleep_for_ms(100);
-        }
-        //Right
-        if(direction = 4){
+            printPlant(plant_number);
+            break;
+        case 4: //right
             plant_number = plant_number + 1;
             if(plant_number > 2){
                 plant_number = 0;
             }
-            sleep_for_ms(100); 
+            printPlant(plant_number);
+            break;
+        default:
+            printf("Joystick reading not correct!\n");
+            break;
         }
         greenbutton = readFromFile(GREEN_BUTTON);
-
     }
 
     printf("Shutting down system\n");
