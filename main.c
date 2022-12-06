@@ -38,14 +38,17 @@ int main(int argc, char *argv[])
             moist = isMoist(plant_number);
             if(moist){
                 printSmileyFace();
+                sleep_for_ms(1000);
             }
             else{
                 printSadFace();
+                sleep_for_ms(1000);
             }
             break;
         case 1: //up
             rating = getMoistureRating(plant_number);
-            printInteger(rating);
+            printf("rating for %d plant : %d", plant_number, rating);
+            printLevel(rating);
             break;
         case 2: //down 
             printPlant(plant_number);
