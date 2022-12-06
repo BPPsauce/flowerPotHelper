@@ -23,10 +23,10 @@
 #define NUM_MOISTURE_LEVELS 10
 
 //Maximum wetness Moisture Sensor can read
-#define MIN_MOISTURE_READING 1100
+#define MIN_MOISTURE_READING 1000
 
 //Maximum dryness Moisture Sensor can read
-#define MAX_MOISTURE_READING 2500
+#define MAX_MOISTURE_READING 2800
 
 //Number of Sample Readings for Average Sample Value
 #define NUM_SENSOR_READINGS 5
