@@ -23,10 +23,10 @@
 #define NUM_MOISTURE_LEVELS 10
 
 //Maximum wetness Moisture Sensor can read
-#define MIN_MOISTURE_READING 1000
+#define MIN_MOISTURE_READING 900
 
 //Maximum dryness Moisture Sensor can read
-#define MAX_MOISTURE_READING 4095
+#define MAX_MOISTURE_READING 1600
 
 
 static int readSoilMoisture(int sensorNumber){
